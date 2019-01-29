@@ -1,20 +1,15 @@
-I am still learning React but now I am adding Axios.
+I am still learning React but now I am adding Axios to fetch data.
 
 I am using the OpenStreetMap Nominatim geocoder as a data source.
 
 ## Project status
 
-2019-Jan-26
-
-I'm wrestling with form input in React.
-The geocoder works fine but I have to feed it good input!
+It works!
 
 ## How to test and develop
 
 ### Test
 The command `npm start` will launch the test setup in a browser.
-
-I added --no-autoinstall option in package.json to prevent parcel from installing openlayers 4 while I am upgrading the source to ol5. This means (for now anyway) you need to run `npm install` before `npm start` to get the dependencies installed.
 
 ### Update git
 
