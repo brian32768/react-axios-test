@@ -97,8 +97,10 @@ export class Geocoder extends Component {
         results : []
     }
     static propTypes = {
-        query: PropTypes.object.isRequired
+        query: PropTypes.object.isRequired,
+        onUpdateMap: PropTypes.func
     };
+
 
     geocode = (s) => {
 
@@ -114,8 +116,15 @@ export class Geocoder extends Component {
         axios.get(geocodeServer + q).then(
             response => {
                 if (response.data.length) {
-                    this.setState({ results: response.data })
+                    this.setState({
+                        results: response.data
+                    })
                     //console.log("Response: ", response.data);
+
+//                    this.props.onUpdateMap(
+//                        response.data[0]
+//                    )
+
                 } else {
                     this.setState({
                         results: [{
@@ -143,15 +152,16 @@ export class Geocoder extends Component {
         if (oldProps.query != this.props.query) {
             console.log("geocoder did update", oldProps, this.props);
             this.geocode(this.props.query);
+
         }
     }
 
     render() {
         return (
             <table border="1"><tbody>
-                <tr><th>score</th><th>name</th></tr>
+                <tr><th>score</th><th>coord</th><th>name</th></tr>
                 { this.state.results.map(gc =>
-                    <tr key={ gc.place_id }><td>{ Math.round(gc.importance*100) }</td><td>{ gc.display_name }</td></tr>
+                    <tr key={ gc.place_id }><td>{ Math.round(gc.importance*100) }</td><td>{ gc.lat + ', ' + gc.lon }</td><td>{ gc.display_name }</td></tr>
                 )}
             </tbody>
             </table>
