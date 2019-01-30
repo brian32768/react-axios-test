@@ -1,13 +1,29 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { GeocodeInput, Geocoder } from './geocoder'
+import GeocodeInput from './geocodeform'
+import Geocoder from './geocoder'
 import { transform } from 'ol/proj'
+import { createStore } from 'redux'
 import { Map, View, Feature, control, geom, interaction, layer, VERSION } from '@map46/ol-react'
 
 import './App.css'
 
 const wgs84 = "EPSG:4326";
 const wm = "EPSG:3857";
+
+function counter(state = 0, action) {
+  switch (action.type) {
+    case 'INCREMENT':
+      return state + 1
+    case 'DECREMENT':
+      return state - 1
+    default:
+      return state
+  }
+}
+
+let store = createStore(counter)
+store.subscribe(() => console.log(store.getState()))
 
 export default class App extends Component {
     state = {
@@ -34,10 +50,13 @@ export default class App extends Component {
     handleUpdateMap = (e) => {
         console.log("Updating map", e);
         this.setState({
-            zoom: 10,
-            center: [0,0]
+            center: [0,0],
+            zoom: 10
         });
+    }
 
+    componentDidUpdate() {
+        console.log("state now", this.state);
     }
 
     render() {
@@ -49,16 +68,18 @@ export default class App extends Component {
                 I will show the top 10 results sorted by score.
 
                 <GeocodeInput onInput={ this.handleInput } />
+                <Geocoder query={ this.state } onUpdateMap={ this.handleUpdateMap } />
 
-                <Map view=<View zoom={ this.state.zoom } center={ this.state.center }/>
-                    useDefaultControls={true}>
-
-                    <Geocoder query={ this.state } onUpdateMap={ this.handleUpdateMap } />
-
-                    <layer.Tile name="OpenStreetMap"
-                        source="OSM"
-                    />
+                <button onClick={this.handleUpdateMap}>update</button>
+                <Map useDefaultControls={true}
+                    view=<View zoom={ this.state.zoom } center={ this.state.center }/>
+                >
+                    <layer.Tile name="OpenStreetMap" source="OSM"/>
                 </Map>
+
+                <button name="inc" onClick={ this.click }>inc</button>
+                <button name="dec" onClick={ this.click }>dec</button>
+                <div id=""></div>
             </>
         );
     }
