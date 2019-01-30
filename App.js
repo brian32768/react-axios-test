@@ -4,26 +4,24 @@ import GeocodeInput from './geocodeform'
 import Geocoder from './geocoder'
 import { transform } from 'ol/proj'
 import { createStore } from 'redux'
-import { Map, View, Feature, control, geom, interaction, layer, VERSION } from '@map46/ol-react'
+import { Container, Row, Col,
+         Button } from 'reactstrap'
+import { Map, View, Feature,
+         control, geom, interaction, layer, VERSION } from '@map46/ol-react'
 
-import './App.css'
+ import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const wgs84 = "EPSG:4326";
 const wm = "EPSG:3857";
-
-function counter(state = 0, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'DECREMENT':
-      return state - 1
-    default:
-      return state
-  }
+const astoria_wm = transform([-123.834,46.187], wgs84,wm)
+let transformfn = (coordinates) => {
+    for (let i = 0; i < coordinates.length; i+=2) {
+        coordinates[i]   += astoria_wm[0];
+        coordinates[i+1] += astoria_wm[1];
+    }
+    return coordinates
 }
-
-let store = createStore(counter)
-store.subscribe(() => console.log(store.getState()))
 
 export default class App extends Component {
     state = {
@@ -60,27 +58,64 @@ export default class App extends Component {
     }
 
     render() {
+        //  currently this draws a blue 5 pointed star
+        const pointMarker = {
+            image: {
+                type: 'regularShape',
+                points: 5,
+                radius: 5,
+                radius1: 5,
+                radius2: 2,
+                stroke: { color: 'blue', width: 1.5 }
+            }
+        }
+        const pointStyle = {
+            image: {
+                type: 'circle',
+                radius: 4,
+                fill: { color: [100,100,100, 0.5] },
+                stroke: { color: 'green', width: 1 }
+            }
+        };
+
         return (
-            <>
-                <h1>Axios Geocoding test</h1>
+            <Container>
+            <Row>
+                <Col>
+                    <h1 id="title">react-axios-test</h1>
+                </Col>
+            </Row>
+            <Row>
+                <Col sm={8}>
+                    Fill in any or all fields.
+                    I will show the top 10 results sorted by score.
+                    <GeocodeInput onInput={ this.handleInput } />
 
-                Fill in any or all fields.
-                I will show the top 10 results sorted by score.
+                    <button onClick={this.handleUpdateMap}>update</button>
+                    <Map useDefaultControls={true}
+                        view=<View zoom={ this.state.zoom } center={ this.state.center }/>
+                    >
+                        <layer.Tile name="OpenStreetMap" source="OSM"/>
 
-                <GeocodeInput onInput={ this.handleInput } />
-                <Geocoder query={ this.state } onUpdateMap={ this.handleUpdateMap } />
+                        <layer.Vector style={ pointMarker }>
 
-                <button onClick={this.handleUpdateMap}>update</button>
-                <Map useDefaultControls={true}
-                    view=<View zoom={ this.state.zoom } center={ this.state.center }/>
-                >
-                    <layer.Tile name="OpenStreetMap" source="OSM"/>
-                </Map>
+                        <Feature id="test-point" style={ pointStyle }>
+                            <geom.Point transform={ transformfn } modify={ this.state.enableModify } >
+                                {[1835, -910]}
+                            </geom.Point>
+                        </Feature>
+                        </layer.Vector>
 
-                <button name="inc" onClick={ this.click }>inc</button>
-                <button name="dec" onClick={ this.click }>dec</button>
-                <div id=""></div>
-            </>
+                    </Map>
+                </Col>
+
+                <Col sm={4}>
+                    Geocode results
+                    <Geocoder query={ this.state } onUpdateMap={ this.handleUpdateMap } />
+                </Col>
+
+              </Row>
+            </Container>
         );
     }
 }

@@ -66,9 +66,9 @@
     font-family: cursive;
 }
 
-h1 {
-    background-color: darkgreen;
+#title {
     color: lightgreen;
+    background-color: darkgreen;
     font-family: sans-serif;
 }
 
@@ -101,6 +101,7 @@ footer {
     top: 50px;
   }
 }
+
 
 .card {
 }

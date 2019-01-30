@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import axios from "axios"
+import { Container, Row, Col } from 'reactstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
 // We're querying the Nomiatim geocoder (OpenStreetMap) via Axios
@@ -75,13 +77,11 @@ export default class Geocoder extends Component {
 
     render() {
         return (
-            <table border="1"><tbody>
-                <tr><th>score</th><th>coord</th><th>name</th></tr>
+            <Container>
                 { this.state.results.map(gc =>
-                    <tr key={ gc.place_id }><td>{ Math.round(gc.importance*100) }</td><td>{ gc.lat + ', ' + gc.lon }</td><td>{ gc.display_name }</td></tr>
+                    <Row key={ gc.place_id }><Col>{ Math.round(gc.importance*100) }:{ gc.display_name }</Col></Row>
                 )}
-            </tbody>
-            </table>
+            </Container>
         );
     }
 }
