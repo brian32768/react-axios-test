@@ -25,7 +25,7 @@ export default class Geocoder extends Component {
     geocode = (s) => {
 
         // Gather all the fields together into a query
-        let q = '';
+        let q = '&addressdetails=1';
         for (let k in s) {
             let v = s[k]
             if (v.length) q += '&' + k + '=' + v;
