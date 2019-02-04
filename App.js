@@ -8,8 +8,11 @@ import { Container, Row, Col,
          Button } from 'reactstrap'
 import { Map, View, Feature,
          control, geom, interaction, layer, VERSION } from '@map46/ol-react'
+import { createStore, combineReducers } from 'redux'
+import { reducer as formReducer } from 'redux-form'
 
- import './App.css'
+
+import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 const wgs84 = "EPSG:4326";
@@ -22,8 +25,15 @@ let transformfn = (coordinates) => {
     }
     return coordinates
 }
+const rootReducer = combineReducers({
+  // ...your other reducers here
+  // you have to pass formReducer under 'form' key,
+  // for custom keys look up the docs for 'getFormState'
+  form: formReducer
+})
+let store = createStore(rootReducer);
 
-export default class App extends Component {
+class App extends Component {
     state = {
         center: transform([-124,46], wgs84,wm),
         zoom: 9,
@@ -119,3 +129,5 @@ export default class App extends Component {
         );
     }
 }
+
+export default App;
