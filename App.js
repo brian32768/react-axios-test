@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { createStore } from 'redux'
 import GeocodeInput from './geocodeform'
 import Geocoder from './geocoder'
 import { transform } from 'ol/proj'
@@ -9,8 +10,10 @@ import { Container, Row, Col,
 import { Map, View, Feature,
          control, geom, interaction, layer, VERSION } from '@map46/ol-react'
 
- import './App.css'
+import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+
+const store = createStore();
 
 const wgs84 = "EPSG:4326";
 const wm = "EPSG:3857";
