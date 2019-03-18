@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Field, reduxForm} from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
 
 // This is the form to gather input on geocoding.
 
@@ -8,7 +8,7 @@ const defaultCounty = "Clatsop County"
 const defaultState = "Oregon"
 const defaultCountry = "US"
 
-GeocodeInput = props => {
+let GeocodeInput = props => {
     // This component renders a form for entering geocoding information.
 
     const onChange = (e) => {

@@ -3,14 +3,12 @@ import PropTypes from 'prop-types'
 import GeocodeInput from './geocodeform'
 import Geocoder from './geocoder'
 import { transform } from 'ol/proj'
-import { createStore } from 'redux'
-import { Container, Row, Col,
-         Button } from 'reactstrap'
+import { Container, Row, Col, Button } from 'reactstrap'
 import { Map, View, Feature,
          control, geom, interaction, layer, VERSION } from '@map46/ol-react'
-import { createStore, combineReducers } from 'redux'
-import { reducer as formReducer } from 'redux-form'
-
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import configStore from './redux/configstore'
 
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -25,15 +23,17 @@ let transformfn = (coordinates) => {
     }
     return coordinates
 }
+
+const { store, persistor } = configStore();
+
 const rootReducer = combineReducers({
   // ...your other reducers here
   // you have to pass formReducer under 'form' key,
   // for custom keys look up the docs for 'getFormState'
   form: formReducer
 })
-let store = createStore(rootReducer);
 
-class App extends Component {
+export default class App extends Component {
     state = {
         center: transform([-124,46], wgs84,wm),
         zoom: 9,
@@ -89,45 +89,46 @@ class App extends Component {
         };
 
         return (
-            <Container>
-            <Row>
-                <Col>
-                    <h1 id="title">react-axios-test</h1>
-                </Col>
-            </Row>
-            <Row>
-                <Col sm={8}>
-                    Fill in any or all fields.
-                    I will show the top 10 results sorted by score.
-                    <GeocodeInput onInput={ this.handleInput } />
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <Container>
+                        <Row>
+                            <Col>
+                                <h1 id="title">react-axios-test</h1>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col sm={8}>
+                                Fill in any or all fields.
+                                I will show the top 10 results sorted by score.
+                                <GeocodeInput onInput={ this.handleInput } />
 
-                    <button onClick={this.handleUpdateMap}>update</button>
-                    <Map useDefaultControls={true}
-                        view=<View zoom={ this.state.zoom } center={ this.state.center }/>
-                    >
-                        <layer.Tile name="OpenStreetMap" source="OSM"/>
+                                <button onClick={this.handleUpdateMap}>update</button>
+                                <Map useDefaultControls={true}
+                                    view=<View zoom={ this.state.zoom } center={ this.state.center }/>
+                                >
+                                    <layer.Tile name="OpenStreetMap" source="OSM"/>
 
-                        <layer.Vector style={ pointMarker }>
+                                    <layer.Vector style={ pointMarker }>
 
-                        <Feature id="test-point" style={ pointStyle }>
-                            <geom.Point transform={ transformfn } modify={ this.state.enableModify } >
-                                {[1835, -910]}
-                            </geom.Point>
-                        </Feature>
-                        </layer.Vector>
+                                    <Feature id="test-point" style={ pointStyle }>
+                                        <geom.Point transform={ transformfn } modify={ this.state.enableModify } >
+                                            {[1835, -910]}
+                                        </geom.Point>
+                                    </Feature>
+                                    </layer.Vector>
 
-                    </Map>
-                </Col>
+                                </Map>
+                            </Col>
 
-                <Col sm={4}>
-                    Geocode results
-                    <Geocoder query={ this.state } onUpdateMap={ this.handleUpdateMap } />
-                </Col>
-
-              </Row>
-            </Container>
+                            <Col sm={4}>
+                                Geocode results
+                                <Geocoder query={ this.state } onUpdateMap={ this.handleUpdateMap } />
+                            </Col>
+                        </Row>
+                    </Container>
+                </PersistGate>
+            </Provider>
         );
     }
 }
-
-export default App;
