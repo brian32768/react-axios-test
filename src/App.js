@@ -15,8 +15,6 @@ import configStore from './redux/configstore'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const store = createStore();
-
 const wgs84 = "EPSG:4326";
 const wm = "EPSG:3857";
 const astoria_wm = transform([-123.834,46.187], wgs84,wm)
@@ -29,7 +27,6 @@ let transformfn = (coordinates) => {
 }
 
 const { store, persistor } = configStore();
-
 const rootReducer = combineReducers({
   // ...your other reducers here
   // you have to pass formReducer under 'form' key,
