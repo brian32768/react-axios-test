@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com/brian32768/react-axios-test.git"
+        "url": "git@github.com:brian32768/react-axios-test.git"
     },
     "keywords": [
         "react",
@@ -18,7 +18,7 @@
     "author": "Brian H Wilson",
     "license": "MIT",
     "dependencies": {
-        "@map46/ol-react": "^0.2.7",
+        "@map46/ol-react": "^0.2.18",
         "axios": "^0.18.0",
         "deepmerge": "^3.2.0",
         "ol": "^5.3.1",
