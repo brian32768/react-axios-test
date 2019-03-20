@@ -1,17 +1,20 @@
 import { createStore } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import reducer from './reducers'
+import rootReducer from './reducers'
 
 const persistConfig = {
     key: "root",
     storage,
 }
 
-const pReducer = persistReducer(persistConfig, reducer)
+const enhancedCompose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const pReducer = persistReducer(persistConfig, rootReducer)
 
 export default () => {
-    let store = createStore(pReducer)
+    let store = createStore(pReducer
+        // add enhancedCompose here
+    )
     let persistor = persistStore(store)
     return { store, persistor }
 }

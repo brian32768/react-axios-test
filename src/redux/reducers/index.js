@@ -3,6 +3,6 @@ import { devToolsEnhancer } from 'redux-devtools-extension'
 import { reducer as formReducer } from 'redux-form'
 
 export default combineReducers({
-    formReduxer,
+    formReducer,
     //devToolsEnhancer({ trace: true, traceLimit: 25 })
 });

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { createStore } from 'redux'
 import GeocodeInput from './geocodeform'
 import Geocoder from './geocoder'
 import { transform } from 'ol/proj'
@@ -27,12 +26,6 @@ let transformfn = (coordinates) => {
 }
 
 const { store, persistor } = configStore();
-const rootReducer = combineReducers({
-  // ...your other reducers here
-  // you have to pass formReducer under 'form' key,
-  // for custom keys look up the docs for 'getFormState'
-  form: formReducer
-})
 
 export default class App extends Component {
     state = {
